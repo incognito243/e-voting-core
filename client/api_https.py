@@ -57,11 +57,25 @@ def create_voting_server(request: CreateVotingServerRequest):
     )
     return {"server_id": server_id}
 
+@app.get("/internal/v1/voting_server/is_exist/{server_id}")
+def voting_server_is_exist(server_id: str):
+    if server_id in voting_servers:
+        return {"exists": True}
+    else:
+        return {"exists": False}
+
 @app.post("/internal/v1/create_user")
 def create_user(request: CreateUserRequest):
     user_id = f"user_{request.user_name}_{len(users) + 1}"
     users[user_id] = User(request.user_name)
     return CreateUserResponse(user_id=user_id)
+
+@app.get("/internal/v1/is_exist/{user_id}")
+def is_exist(user_id: str):
+    if user_id in users:
+        return {"exists": True}
+    else:
+        return {"exists": False}
 
 @app.post("/internal/v1/vote")
 def vote(request: VoteRequest):
